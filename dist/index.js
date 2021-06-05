@@ -21,26 +21,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var crypto = __importStar(require("crypto"));
 var Block = /** @class */ (function () {
-    function Block(index, previousHash, timestamp, data) {
+    function Block(index, parentHash, timestamp, data) {
         this.index = index;
-        this.previousHash = previousHash;
+        this.parentHash = parentHash;
         this.timestamp = timestamp;
         this.data = data;
         var _a = this.mine(), nonce = _a.nonce, hash = _a.hash;
         this.nonce = nonce;
         this.hash = hash;
     }
-    Block.prototype.calculateHash = function (nonce) {
-        var data = this.index + this.previousHash + this.timestamp + this.data + nonce;
-        return crypto.createHash('sha256').update(data).digest('hex');
-    };
     Block.prototype.mine = function () {
-        var hash;
         var nonce = 0;
+        var hash;
         do {
-            hash = this.calculateHash(++nonce);
-        } while (hash.startsWith('0000') === false);
+            hash = this.generateHash(++nonce);
+        } while (hash.startsWith('000') === false);
         return { nonce: nonce, hash: hash };
+    };
+    Block.prototype.generateHash = function (nonce) {
+        var generatedHash = this.index + this.parentHash + this.timestamp + this.data + nonce;
+        return crypto.createHash('sha256').update(generatedHash).digest('hex');
     };
     return Block;
 }());
@@ -57,15 +57,15 @@ var Blockchain = /** @class */ (function () {
         configurable: true
     });
     Blockchain.prototype.addBlock = function (data) {
-        var block = new Block(this.latestBlock.index + 1, this.latestBlock.hash, Date.now(), data);
-        this.chain.push(block);
+        var newBlock = new Block(this.latestBlock.index + 1, this.latestBlock.hash, Date.now(), data);
+        this.chain.push(newBlock);
     };
     return Blockchain;
 }());
-console.log('Creating the blockchain with genesis block...');
+console.log('Initialize blockchain...');
 var blockchain = new Blockchain();
-console.log('Mining block 1...');
+console.log('Added first block...');
 blockchain.addBlock('First block');
-console.log('Mining block 2...');
+console.log('Added second block...');
 blockchain.addBlock('Second block');
 console.log(JSON.stringify(blockchain, null, 2));
