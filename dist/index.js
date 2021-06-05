@@ -26,11 +26,21 @@ var Block = /** @class */ (function () {
         this.previousHash = previousHash;
         this.timestamp = timestamp;
         this.data = data;
-        this.hash = this.calculateHash();
+        var _a = this.mine(), nonce = _a.nonce, hash = _a.hash;
+        this.nonce = nonce;
+        this.hash = hash;
     }
-    Block.prototype.calculateHash = function () {
-        var data = this.index + this.previousHash + this.timestamp + this.data;
+    Block.prototype.calculateHash = function (nonce) {
+        var data = this.index + this.previousHash + this.timestamp + this.data + nonce;
         return crypto.createHash('sha256').update(data).digest('hex');
+    };
+    Block.prototype.mine = function () {
+        var hash;
+        var nonce = 0;
+        do {
+            hash = this.calculateHash(++nonce);
+        } while (hash.startsWith('0000') === false);
+        return { nonce: nonce, hash: hash };
     };
     return Block;
 }());
@@ -52,7 +62,10 @@ var Blockchain = /** @class */ (function () {
     };
     return Blockchain;
 }());
+console.log('Creating the blockchain with genesis block...');
 var blockchain = new Blockchain();
+console.log('Mining block 1...');
 blockchain.addBlock('First block');
+console.log('Mining block 2...');
 blockchain.addBlock('Second block');
 console.log(JSON.stringify(blockchain, null, 2));
