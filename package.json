@@ -1,0 +1,16 @@
+{
+  "name": "simple-blockchain-sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "keywords": ["blockchain", "typescript"],
+  "author": "Liliya Voloshina",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^15.12.1",
+    "typescript": "^4.3.2"
+  }
+}
