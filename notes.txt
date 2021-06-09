@@ -1,13 +1,55 @@
-// обьявить класс отдельного блока
-// в нем должны присутствовать пруф и хэш
-// в конструкторе - порядок, предыдущий хэш, время и дата
-// хэш и пруф вычисляются через приватный метод майн
-// этот метод перебирает хэши и увеличивает пруф пока не сгенерирует допустимый хэш
-// генерация хэша через метод generateHash, который получает пруф и складывает все значения блока с добавлением пруфа 
-// он возвращает декодированный хэш
+index.html:
+status
+sender
+recipient
+amount
+transfer
+pending-transactions
+confirm
+blocks
 
-// обьявить класс блокчэйна
-// в нем лежит массив с блоками
-// через get вычисляется последний блок
-// при инициализации класса создается начальный блок (с помощью класса block)
-// есть метод addBlock, котрый принимает data нового блока и создает новый блок
+bc-transaction:
+обьявляем интерфейс транзакции (sender, recipient, amount)
+создаем класс блока
+он имеет - nonce, hash, а при инициализации - parentHash, timestamp, transactions
+также в нем есть функция - generateHash, принимающая nonce из функции mine
+и возвращающая хэш всех данных, полученных при инициализации с помощью SHA-256
+функция mine брутфорсит сгенерированный хэш циклом, пока он не будет начинаться с 000
+далее создаем класс Blockchain
+он содержит в себе массив с блоками(chain) и массив pendingTransactions
+также в нем есть приватный геттер последнего блока и геттеры всей цепочки и исполняемых транзакций
+функция генерации начального блока (createGenesisBlock) создает новый блок, майнит его хэш 
+и пушит в массив chain
+функция createTransaction получает массив транзакций и пушит их в массив исполняемых
+функция minePendingTransactions берет все исполняемые транзакции, создает новый блок с ними,
+хэширует их и добавляет в цепочку. затем чистит исполяемые транзы
+
+main:
+импортируем классы блока и блокчейна
+создаем enum статуса с полями Initialization, AddTransaction, ReadyToMine, MineInProgress
+ищем все блоки с html, которые понядобятся: statusEl, senderEl, recipientEl, amountEl,
+transferBtn, pendingTransactionsEl, confirmBtn, blocksEl
+затем функция main - вызов addTransaction при клике на transferBtn и 
+mineBlock при confirmBtn
+вставка в элемент статуса - Initialization
+создание новой цепочки через класс Blockchain
+вызов создания начального блока из класса цепочки
+перебор всех блоков в цепочке и вызов функции generateBlockHtml
+затем вставка сгенерированного html в элемент blocks
+вставка в элемент статуса - AddTransaction
+изменение toggleState(true, false) - дизэйблим confirmBtn
+функция addTransaction - вызов createTransaction из блокчейна, передача
+значений полей senderEl, recipientEl и amountEl
+изменение toggleState(false, false) - раздизэйблим все элементы
+в элемент pendingTransactionsEl вставляем список текущих транзов
+вставка в элемент статуса - ReadyToMine
+очищаем значения всех элементов формы
+функция mineBlock
+вставка в элемент статуса - MineInProgress
+изменение toggleState(true, true) - дизэйблим все элементы
+вызываем метод minePendingTransactions у блокчейна
+вставка в pendingTransactionsEl No pending transactions at the moment.
+вставка в элемент статуса - AddTransaction
+перебор всех блоков в цепочке и вызов функции generateBlockHtml
+затем вставка сгенерированного html в элемент blocks
+изменение toggleState(true, false) - дизэйблим confirmBtn
