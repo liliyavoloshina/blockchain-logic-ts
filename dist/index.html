@@ -16,7 +16,7 @@
       <div id="status" class="mb-5 p-4 border border-gray-200 bg-white rounded">Status Block</div>
       <section class="my-5s">
         <h2 class="font-bold mb-2">Add transaction</h2>
-        <form class="flex justify-between flex-wrap gap-2">
+        <div class="flex justify-between flex-wrap gap-2">
           <input id="sender" type="text" placeholder="Sender"
             class="flex-1 p-2 border border-gray-200 rounded focus:outline-none focus:ring focus:border-blue-200">
           <input id="recipient" type="text" placeholder="Recipient"
@@ -28,12 +28,13 @@
               class="block w-full md:w-48 ml-auto p-2 text-white bg-blue-600 rounded hover:opacity-75 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50">Transfer
               money</button>
           </div>
-        </form>
+        </div>
       </section>
 
       <section class="my-5">
         <h2 class="font-bold mb-2">Pending transactions</h2>
-        <div id="pending-transactions" class="p-4 border border-gray-200 bg-white rounded">No pending transactions...</div>
+        <div id="pending-transactions" class="p-4 border border-gray-200 bg-white rounded">No pending transactions...
+        </div>
         <div class="w-full mt-5">
           <button id="confirm"
             class="block w-full md:w-48 ml-auto p-2 text-white bg-blue-600 rounded hover:opacity-75 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50">Confirm
@@ -44,29 +45,12 @@
       <section class="mt-5">
         <h2 class="font-bold mb-2">Blockchain state</h2>
         <div id="blocks" class="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-          <div class="p-2 border border-gray-200 bg-white rounded">
-            <span class="mr-2">#1</span>
-            <span>12.12.12</span>
-            <div class="my-2">
-              <div class="font-bold text-blue-600">Parent Hash:</div>
-              <div>1234567890987654</div>
-            </div>
-            <div class="my-2">
-              <div class="font-bold text-blue-600">This Hash:</div>
-              <div>1234567890987654</div>
-            </div>
-            <div>
-              <div class="font-bold text-blue-600">Transactions:</div>
-              <div>sender → recipient - $21</div>
-              <div>sender → recipient - $21</div>
-              <div>sender → recipient - $21</div>
-            </div>
-          </div>
+
         </div>
       </section>
     </main>
   </div>
-
+  <script type="module" src="main.js"></script>
 </body>
 
 </html>
