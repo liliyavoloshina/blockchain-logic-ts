@@ -17,11 +17,11 @@
       <section class="my-5s">
         <h2 class="font-bold mb-2">Add transaction</h2>
         <div class="flex justify-between flex-wrap gap-2">
-          <input id="sender" type="text" placeholder="Sender"
+          <input id="sender" type="text" placeholder="Sender" autocomplete="off"
             class="flex-1 p-2 border border-gray-200 rounded focus:outline-none focus:ring focus:border-blue-200">
-          <input id="recipient" type="text" placeholder="Recipient"
+          <input id="recipient" type="text" placeholder="Recipient" autocomplete="off"
             class="flex-1 p-2 border border-gray-200 rounded focus:outline-none focus:ring focus:border-blue-200">
-          <input id="amount" type="number" placeholder="Amount"
+          <input id="amount" type="number" placeholder="Amount" autocomplete="off"
             class="flex-2 p-2 border border-gray-200 rounded focus:outline-none focus:ring focus:border-blue-200">
           <div class="w-full mt-3">
             <button id="transfer"
@@ -45,7 +45,7 @@
       <section class="mt-5">
         <h2 class="font-bold mb-2">Blockchain state</h2>
         <div id="blocks" class="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-
+          <p>There is no chain yet...</p>
         </div>
       </section>
     </main>

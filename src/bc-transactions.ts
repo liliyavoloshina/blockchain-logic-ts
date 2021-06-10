@@ -41,7 +41,7 @@ export class Blockchain {
   }
 
   async createGenesisBlock() {
-    const block = new Block('0', Date.now(), [])
+    const block = new Block('---', Date.now(), [])
     await block.mine()
     this._chain.push(block)
   }

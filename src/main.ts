@@ -1,9 +1,9 @@
 import { Block, Blockchain } from './bc-transactions.js'
 
 enum Status {
-  Init = `🔨 Creating blockchain...`,
-  AddTransaction = `⏳ Adding your transaction...`,
-  ReadyToMine = `✨ Ready to mine your transactions!`,
+  Init = `✨ Creating blockchain...`,
+  AddTransaction = `💰 Add one or more transactions!`,
+  ReadyToMine = `✅ Ready to mine new block!`,
   MineInProgress = `⛏ Mining...`
 }
 
@@ -21,6 +21,7 @@ const statusField = document.getElementById('status') as HTMLDivElement,
   confirmButton.addEventListener('click', mineBlock)
 
   statusField.textContent = Status.Init
+  toggleDisabling(true, true)
 
   const blockchain = new Blockchain()
   await blockchain.createGenesisBlock()
@@ -39,14 +40,14 @@ const statusField = document.getElementById('status') as HTMLDivElement,
     blockchain.createTransaction(transaction)
 
     toggleDisabling(false, false)
-    pendingTransactionsField.textContent = blockchain.pendingTransactions.map(t =>
-      `${t.sender} to ${t.recipient} - $${t.amount}`).join('\n')
+    pendingTransactionsField.innerHTML = blockchain.pendingTransactions.map(t =>
+      `<p>${t.sender} to ${t.recipient}: $${t.amount}`).join('</p>')
 
     statusField.textContent = Status.ReadyToMine
 
     senderField.value = ''
     recipientField.value = ''
-    amountField.value = '0'
+    amountField.value = ''
   }
 
   async function mineBlock() {
@@ -55,7 +56,7 @@ const statusField = document.getElementById('status') as HTMLDivElement,
     await blockchain.minePendingTransactions()
     pendingTransactionsField.textContent = 'No pending transaction...'
     statusField.textContent = Status.AddTransaction
-
+    console.log(blockchain.chain)
     blocksField.innerHTML = blockchain.chain.map((block, index) => generateBlockHtml(block, index)).join('')
     toggleDisabling(true, false)
   }
@@ -69,19 +70,19 @@ function toggleDisabling(confirmation: boolean, transfering: boolean) {
 function generateBlockHtml(block: Block, index: number): string {
   return `
   <div class="p-2 border border-gray-200 bg-white rounded">
-            <span class="mr-2">#${index}</span>
+            <span class="mr-2">#${index + 1}</span>
             <span>${new Date().toLocaleDateString()}</span>
             <div class="my-2">
               <div class="font-bold text-blue-600">Parent Hash:</div>
-              <div>${block.parentHash}</div>
+              <div class="truncate">${block.parentHash}</div>
             </div>
             <div class="my-2">
               <div class="font-bold text-blue-600">This Hash:</div>
-              <div>${block.hash}</div>
+              <div class="truncate">${block.hash}</div>
             </div>
             <div>
               <div class="font-bold text-blue-600">Transactions:</div>
-              <div>${block.transactions.map(t => `${t.sender} → ${t.recipient} - $${t.amount}`)}</div>
+              <ul>${block.transactions.length > 0 ? block.transactions.map(t => `<li>${t.sender} → ${t.recipient}: $${t.amount}</li>`).join('') : '---'}</ul>
             </div>
           </div>
   `

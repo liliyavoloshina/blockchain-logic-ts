@@ -1,9 +1,9 @@
 import { Blockchain } from './bc-transactions.js';
 var Status;
 (function (Status) {
-    Status["Init"] = "\uD83D\uDD28 Creating blockchain...";
-    Status["AddTransaction"] = "\u23F3 Adding your transaction...";
-    Status["ReadyToMine"] = "\u2728 Ready to mine your transactions!";
+    Status["Init"] = "\u2728 Creating blockchain...";
+    Status["AddTransaction"] = "\uD83D\uDCB0 Add one or more transactions!";
+    Status["ReadyToMine"] = "\u2705 Ready to mine new block!";
     Status["MineInProgress"] = "\u26CF Mining...";
 })(Status || (Status = {}));
 const statusField = document.getElementById('status'), senderField = document.getElementById('sender'), recipientField = document.getElementById('recipient'), amountField = document.getElementById('amount'), transferButton = document.getElementById('transfer'), pendingTransactionsField = document.getElementById('pending-transactions'), confirmButton = document.getElementById('confirm'), blocksField = document.getElementById('blocks');
@@ -11,6 +11,7 @@ const statusField = document.getElementById('status'), senderField = document.ge
     transferButton.addEventListener('click', addTransaction);
     confirmButton.addEventListener('click', mineBlock);
     statusField.textContent = Status.Init;
+    toggleDisabling(true, true);
     const blockchain = new Blockchain();
     await blockchain.createGenesisBlock();
     blocksField.innerHTML = blockchain.chain.map((block, index) => generateBlockHtml(block, index)).join('');
@@ -24,11 +25,11 @@ const statusField = document.getElementById('status'), senderField = document.ge
         };
         blockchain.createTransaction(transaction);
         toggleDisabling(false, false);
-        pendingTransactionsField.textContent = blockchain.pendingTransactions.map(t => `${t.sender} to ${t.recipient} - $${t.amount}`).join('\n');
+        pendingTransactionsField.innerHTML = blockchain.pendingTransactions.map(t => `<p>${t.sender} to ${t.recipient}: $${t.amount}`).join('</p>');
         statusField.textContent = Status.ReadyToMine;
         senderField.value = '';
         recipientField.value = '';
-        amountField.value = '0';
+        amountField.value = '';
     }
     async function mineBlock() {
         statusField.textContent = Status.MineInProgress;
@@ -36,6 +37,7 @@ const statusField = document.getElementById('status'), senderField = document.ge
         await blockchain.minePendingTransactions();
         pendingTransactionsField.textContent = 'No pending transaction...';
         statusField.textContent = Status.AddTransaction;
+        console.log(blockchain.chain);
         blocksField.innerHTML = blockchain.chain.map((block, index) => generateBlockHtml(block, index)).join('');
         toggleDisabling(true, false);
     }
@@ -47,19 +49,19 @@ function toggleDisabling(confirmation, transfering) {
 function generateBlockHtml(block, index) {
     return `
   <div class="p-2 border border-gray-200 bg-white rounded">
-            <span class="mr-2">#${index}</span>
+            <span class="mr-2">#${index + 1}</span>
             <span>${new Date().toLocaleDateString()}</span>
             <div class="my-2">
               <div class="font-bold text-blue-600">Parent Hash:</div>
-              <div>${block.parentHash}</div>
+              <div class="truncate">${block.parentHash}</div>
             </div>
             <div class="my-2">
               <div class="font-bold text-blue-600">This Hash:</div>
-              <div>${block.hash}</div>
+              <div class="truncate">${block.hash}</div>
             </div>
             <div>
               <div class="font-bold text-blue-600">Transactions:</div>
-              <div>${block.transactions.map(t => `${t.sender} → ${t.recipient} - $${t.amount}`)}</div>
+              <ul>${block.transactions.length > 0 ? block.transactions.map(t => `<li>${t.sender} → ${t.recipient}: $${t.amount}</li>`).join('') : '---'}</ul>
             </div>
           </div>
   `;
