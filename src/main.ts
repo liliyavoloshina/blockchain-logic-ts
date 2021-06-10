@@ -56,7 +56,6 @@ const statusField = document.getElementById('status') as HTMLDivElement,
     await blockchain.minePendingTransactions()
     pendingTransactionsField.textContent = 'No pending transaction...'
     statusField.textContent = Status.AddTransaction
-    console.log(blockchain.chain)
     blocksField.innerHTML = blockchain.chain.map((block, index) => generateBlockHtml(block, index)).join('')
     toggleDisabling(true, false)
   }
