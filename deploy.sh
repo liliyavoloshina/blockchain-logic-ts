@@ -4,7 +4,7 @@
 set -e
 
 # build
-npm run build
+npm run tsc
 
 # navigate into the build output directory
 cd dist
