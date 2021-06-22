@@ -1,3 +1,3 @@
 # mini-blockchain
 
-Blockchain example building with Typescript
+Blockchain example built with Typescript
